@@ -37,7 +37,7 @@ const GameCard: React.FC<GameCardProps> = ({
             ? "secondary.main"
             : "#666",
         fontWeight: "bold",
-        fontSize: isHeader ? "1rem" : "clamp(1rem, 2vw, 2rem)",
+        fontSize: "1rem",
         textAlign: "center",
         textTransform: isHeader ? "uppercase" : "none",
         padding: 1,
@@ -49,7 +49,7 @@ const GameCard: React.FC<GameCardProps> = ({
         ...sx,
       }}
     >
-      {isHeader ? <AutoFontSizeText>{children}</AutoFontSizeText> : children}
+      <AutoFontSizeText>{children}</AutoFontSizeText>
     </Box>
   );
 };

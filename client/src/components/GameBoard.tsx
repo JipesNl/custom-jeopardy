@@ -11,12 +11,14 @@ const GameBoard = ({
   const { gameState } = useGameContext();
   const categories = gameState?.phase[selectedBoard]?.categories || [];
 
-  const getNumberOfQuestions = () => {
-    try {
-      return categories[0]?.questions?.length || 0;
-    } catch {
-      return 0;
-    }
+  const onQuestionClick = (categoryName: string, questionValue: number) => {
+    console.log(`Question clicked: ${categoryName} - $${questionValue}`);
+
+    const question = categories
+      .find((category) => category.name === categoryName)
+      .questions.find((q) => q.value === questionValue);
+
+    // Implement showing of question dialog.
   };
 
   return (
@@ -61,9 +63,7 @@ const GameBoard = ({
                 onClick={() => {
                   if (question.available) {
                     // handle question click here if needed
-                    console.log(
-                      `Question clicked: ${category.name} - ${question.value}`,
-                    );
+                    onQuestionClick(category.name, question.value);
                   }
                 }}
               >
