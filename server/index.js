@@ -1,12 +1,21 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { v4: uuidv4 } = require("uuid");
+const { json } = require("express");
 
 // Create the HTTP server
 const httpServer = createServer(app);
+app.use(cors());
+app.use(json());
+
+// TODO: FIX THIS PASSWORD SHIT
+const SECRET = "abcdefg12321";
+const PASSWORD = "password"; // add env variable later
 
 // Store players
 const players = new Map();
@@ -97,6 +106,32 @@ app.use(express.static(path.join(clientPath, "dist")));
 app.get("/", (req, res) => {
   res.sendFile(path.join(clientPath, "dist", "index.html"));
 });
+
+app.post("/api/login", (req, res) => {
+  console.log("HERE");
+  console.log(req.body);
+  const { password } = req.body;
+  if (password === PASSWORD) {
+    const token = jwt.sign({ user: "host" }, SECRET, { expiresIn: "10h" });
+    return res.status(200).json({ token });
+  }
+  return res.status(401).json({ message: "Invalid password" });
+});
+
+//example protected route with jwt checking
+// app.get("/protected", (req, res) => {
+//   const authHeader = req.headers.authorization;
+//   if (!authHeader) {
+//     return res.status(401).json({ message: "No token provided" });
+//   }
+//   const token = authHeader.split(" ")[1];
+//   try {
+//     jwt.verify(token, SECRET);
+//     return res.json({ message: "Access granted to protected route" });
+//   } catch (err) {
+//     return res.status(401).json({ message: "Invalid token" });
+//   }
+// });
 
 // Start the server
 const PORT = 3000;

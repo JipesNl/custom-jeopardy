@@ -1,30 +1,36 @@
-import { useContext, useState } from "react";
-import { ConnectionContext } from "./ConnectionContext";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
-import { socket } from "../../socket";
+import { isLoggedIn, logIn } from "./auth";
 
-const Login = () => {
-  const { currentPlayer, login, logout } = useContext(ConnectionContext);
-  const [playerName, setPlayerName] = useState(null);
+const HostLogin = () => {
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    socket.connect();
-    socket.emit("join-player", playerName, (response) => {
-      if (response.success) {
-        console.log("Successfully logged in as:", playerName);
-        login(playerName);
+    const response = logIn(password);
+    response.then((res) => {
+      if (res === 401) {
+        setError("Invalid password. Please try again.");
+      } else if (res === 0) {
+        setError("");
+        navigate("/host");
       } else {
-        setError(response.message || "Login failed");
+        setError("An unexpected error occurred. Please try again later.");
       }
     });
   };
 
-  const handleTextFieldChange = (event) => {
-    event.preventDefault();
-    setPlayerName(event.target.value);
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
   };
+
+  if (isLoggedIn()) {
+    // If already logged in, redirect to the host page
+    navigate("/host");
+  }
 
   return (
     <Box
@@ -41,7 +47,7 @@ const Login = () => {
           align="center"
           sx={{ marginTop: 1, fontFamily: "Korinna" }}
         >
-          Enter Name
+          Host Login
         </Typography>
         <Box
           sx={{
@@ -51,7 +57,7 @@ const Login = () => {
           }}
         >
           <TextField
-            id="input-name"
+            id="input-password"
             sx={{
               marginTop: 3,
               width: "90%",
@@ -63,12 +69,13 @@ const Login = () => {
                 fontFamily: "Korinna",
               },
             }}
-            label="Name"
+            label="Password"
+            type="password"
             variant="filled"
             required
-            error={playerName === ""}
-            helperText={playerName === "" ? "Field cannot be empty" : ""}
-            onChange={(e) => handleTextFieldChange(e)}
+            error={password === ""}
+            helperText={password === "" ? "Field cannot be empty" : ""}
+            onChange={handlePasswordChange}
             onKeyDown={(event) => {
               if (event.key == "Enter") {
                 event.preventDefault();
@@ -87,12 +94,12 @@ const Login = () => {
           <Button
             variant="contained"
             sx={{ marginTop: 3, fontFamily: "Korinna", fontSize: 15 }}
-            onClick={(event) => handleLogin()}
+            onClick={handleLogin}
           >
             Submit
           </Button>
         </Box>
-        {error ? (
+        {error && (
           <Box
             sx={{
               justifyContent: "center",
@@ -106,12 +113,10 @@ const Login = () => {
               {error}
             </Alert>
           </Box>
-        ) : (
-          <></>
         )}
       </Card>
     </Box>
   );
 };
 
-export default Login;
+export default HostLogin;
