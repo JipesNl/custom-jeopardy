@@ -29,6 +29,12 @@
               "available": true
             },
             {
+              "value": 500,
+              "question": "What planet is known as the Red Planet?",
+              "answer": "Mars",
+              "available": true
+            },
+            {
               "value": -1,
               "question": "What is the powerhouse of the cell?",
               "answer": "Mitochondria",
@@ -52,6 +58,12 @@
               "available": true
             },
             {
+              "value": 500,
+              "question": "What planet is known as the Red Planet?",
+              "answer": "Mars",
+              "available": true
+            },
+            {
               "value": -1,
               "question": "What is the powerhouse of the cell?",
               "answer": "Mitochondria",
@@ -72,6 +84,12 @@
               "value": 400,
               "question": "In what year did World War II end?",
               "answer": "1945",
+              "available": true
+            },
+            {
+              "value": 500,
+              "question": "What planet is known as the Red Planet?",
+              "answer": "Mars",
               "available": true
             },
             {

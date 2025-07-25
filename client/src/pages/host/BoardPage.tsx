@@ -15,43 +15,43 @@ const BoardPage = () => {
 
   return (
     <Container>
-      <IconButton
-        onClick={(e) => {
-          e.preventDefault();
-          logOut();
-        }}
-        sx={{
-          position: "fixed",
-          top: 16, // Add some spacing from the top
-          left: 16, // Add some spacing from the left
-          backgroundColor: "secondary.main", // Use the secondary color
-          color: "primary.contrastText", // Ensure the icon is visible
-          width: 48, // Set width for the circular shape
-          height: 48, // Set height for the circular shape
-          borderRadius: "50%", // Make it a circle
-          "&:hover": {
-            backgroundColor: "secondary.dark", // Darken the color on hover
-          },
-        }}
-      >
-        <LogoutIcon color="primary" />
-      </IconButton>
       <Box
         sx={{
           width: "100%",
-          maxHeight: "85vh", // Ensure it does not exceed 60%
-          minHeight: "50px", // Optional: Set a minimum height
-          position: "fixed",
-          top: 0,
-          left: 0,
-          alignItems: "center",
+          height: "85vh",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          overflow: "hidden", // Prevent content from overflowing
+          overflow: "hidden",
         }}
       >
-        <GameBoard />
+        <Box sx={{ p: 2 }}>
+          <IconButton
+            onClick={(e) => {
+              e.preventDefault();
+              logOut();
+            }}
+            sx={{
+              position: "fixed",
+              top: 16,
+              left: 16,
+              zIndex: 10, // ensure it floats above other content
+              backgroundColor: "secondary.main",
+              color: "primary.contrastText",
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              boxShadow: 3,
+              "&:hover": {
+                backgroundColor: "secondary.dark",
+              },
+            }}
+          >
+            <LogoutIcon />
+          </IconButton>
+        </Box>
+        <Box sx={{ flex: 1, px: 2, pb: 2 }}>
+          <GameBoard />
+        </Box>
       </Box>
       <Box
         sx={{
