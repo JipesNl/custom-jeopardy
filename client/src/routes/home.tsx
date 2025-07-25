@@ -1,12 +1,15 @@
-import { ConnectionContext, ConnectionProvider } from "../pages/client/ConnectionContext";
-import {useContext} from "react";
+import {
+  ConnectionContext,
+  ConnectionProvider,
+} from "../pages/client/ConnectionContext";
+import { useContext } from "react";
 import Buzzer from "../pages/client/Buzzer";
 import Login from "../pages/client/Login";
 
 const getPlayerID = () => {
-  const playerID = sessionStorage.getItem('playerID');
+  const playerID = sessionStorage.getItem("playerID");
   return playerID ? JSON.parse(playerID) : null;
-}
+};
 
 function Home() {
   return (
@@ -18,11 +21,7 @@ function Home() {
 
 function Page() {
   const { currentPlayer } = useContext(ConnectionContext);
-  return (
-    <>
-    { currentPlayer ? <Buzzer /> : <Login /> }
-    </>
-  )
+  return <>{currentPlayer ? <Buzzer /> : <Login />}</>;
 }
 
 export default Home;

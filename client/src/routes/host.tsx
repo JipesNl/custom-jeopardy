@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const Host = () => {
   return (
@@ -6,7 +6,7 @@ const Host = () => {
       <h1>Host</h1>
       <p>This is the host page.</p>
     </div>
-  )
-}
+  );
+};
 
-export default Host
+export default Host;

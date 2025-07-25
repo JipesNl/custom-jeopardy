@@ -1,5 +1,5 @@
-import {createContext, useEffect, useState} from "react";
-import {socket} from '../../socket';
+import { createContext, useEffect, useState } from "react";
+import { socket } from "../../socket";
 
 /**
  * @typedef {Object} PlayerContextType
@@ -29,7 +29,7 @@ const ConnectionContext = createContext(null);
  * @returns {string | null} The current player name or null if not found.
  */
 const getInitialPlayerState = () => {
-  const currentPlayer = sessionStorage.getItem('currentPlayer');
+  const currentPlayer = sessionStorage.getItem("currentPlayer");
   return currentPlayer ? JSON.parse(currentPlayer) : null;
 };
 
@@ -38,7 +38,7 @@ const getInitialPlayerState = () => {
  * @param {{ children: React.ReactNode }} props - The children components to wrap with the provider.
  * @returns {JSX.Element} The provider component.
  */
-const ConnectionProvider = ({children}) => {
+const ConnectionProvider = ({ children }) => {
   const [currentPlayer, setCurrentPlayer] = useState(getInitialPlayerState());
   const [isBuzzed, setIsBuzzed] = useState(false);
   const [lockedOut, setLockedOut] = useState(false);
@@ -48,8 +48,8 @@ const ConnectionProvider = ({children}) => {
    */
   function updateStatus() {
     if (!currentPlayer) return;
-    socket.emit('buzz-status', currentPlayer, (response) => {
-      console.log('Buzz status:', response);
+    socket.emit("buzz-status", currentPlayer, (response) => {
+      console.log("Buzz status:", response);
       if (response.buzzedPlayers.includes(currentPlayer)) {
         setIsBuzzed(true);
         setLockedOut(false);
@@ -64,17 +64,17 @@ const ConnectionProvider = ({children}) => {
    * Handles the socket connection event.
    */
   function onConnect() {
-    socket.emit('join-player', currentPlayer, (response) => {
+    socket.emit("join-player", currentPlayer, (response) => {
       if (response.success) {
-        console.log('Connected as:', currentPlayer);
+        console.log("Connected as:", currentPlayer);
       } else {
-        console.error('Connection failed:', response.message);
+        console.error("Connection failed:", response.message);
         logout();
       }
     });
 
-    socket.on('error', (message) => {
-      console.error('Error:', message);
+    socket.on("error", (message) => {
+      console.error("Error:", message);
     });
   }
 
@@ -111,27 +111,27 @@ const ConnectionProvider = ({children}) => {
    * Handles the socket disconnection event.
    */
   function onDisconnect() {
-    console.log('Disconnected from server');
+    console.log("Disconnected from server");
   }
 
   useEffect(() => {
-    sessionStorage.setItem('currentPlayer', JSON.stringify(currentPlayer));
+    sessionStorage.setItem("currentPlayer", JSON.stringify(currentPlayer));
 
     if (!currentPlayer) return;
 
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-    socket.on('buzzed', onBuzzed);
-    socket.on('buzz-reset', onBuzzReset);
-    socket.on('buzz-next', onBuzzNext);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("buzzed", onBuzzed);
+    socket.on("buzz-reset", onBuzzReset);
+    socket.on("buzz-next", onBuzzNext);
 
     // Clean up the event listeners on component unmount
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('buzzed', onBuzzed);
-      socket.off('buzz-reset', onBuzzReset);
-      socket.off('buzz-next', onBuzzNext);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("buzzed", onBuzzed);
+      socket.off("buzz-reset", onBuzzReset);
+      socket.off("buzz-next", onBuzzNext);
     };
   }, [currentPlayer]);
 
@@ -156,7 +156,7 @@ const ConnectionProvider = ({children}) => {
    */
   const handleBuzz = () => {
     if (!lockedOut && !isBuzzed && currentPlayer) {
-      socket.emit('buzz', currentPlayer);
+      socket.emit("buzz", currentPlayer);
     }
   };
 
@@ -169,7 +169,7 @@ const ConnectionProvider = ({children}) => {
         handleBuzz,
         updateStatus,
         login,
-        logout
+        logout,
       }}
     >
       {children}
@@ -177,4 +177,4 @@ const ConnectionProvider = ({children}) => {
   );
 };
 
-export {ConnectionContext, ConnectionProvider};
+export { ConnectionContext, ConnectionProvider };

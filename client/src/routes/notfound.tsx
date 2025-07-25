@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Box, Typography, Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function NotFound() {
   const navigate = useNavigate();
@@ -8,12 +8,12 @@ function NotFound() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        backgroundColor: 'background.default',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
+        minHeight: "100vh",
+        backgroundColor: "background.default",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
         padding: 4,
       }}
     >
@@ -31,13 +31,13 @@ function NotFound() {
           variant="contained"
           color="secondary"
           size="large"
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           sx={{
-            fontWeight: 'bold',
-            fontSize: '1rem',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.4)',
-            '&:hover': {
-              backgroundColor: '#e6b800',
+            fontWeight: "bold",
+            fontSize: "1rem",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+            "&:hover": {
+              backgroundColor: "#e6b800",
             },
           }}
         >
