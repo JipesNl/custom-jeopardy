@@ -2,16 +2,15 @@ import React from "react";
 import { Box, Button, Container, IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logOut } from "./auth";
-import { getState, useGameContext } from "./GameContext";
+import { useGameContext } from "./GameContext";
 import GameBoard from "../../components/GameBoard";
 
 const BoardPage = () => {
   const { gameState, updateState } = useGameContext();
-  console.log("Game State:", gameState);
   const handleGetState = (event) => {
     event.preventDefault();
-    updateState();
-    console.log("Updated Game State:", gameState);
+    console.log(gameState);
+    // console.log("Updated Game State:", gameState);
   };
 
   return (
@@ -40,8 +39,8 @@ const BoardPage = () => {
       <Box
         sx={{
           width: "100%",
-          height: "85%",
-          minHeight: "50px",
+          maxHeight: "85vh", // Ensure it does not exceed 60%
+          minHeight: "50px", // Optional: Set a minimum height
           position: "fixed",
           top: 0,
           left: 0,
@@ -49,6 +48,7 @@ const BoardPage = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          overflow: "hidden", // Prevent content from overflowing
         }}
       >
         <GameBoard />

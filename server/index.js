@@ -160,11 +160,13 @@ app.post("/api/login", (req, res) => {
 });
 
 app.get("/api/host/game-state", (req, res) => {
+  console.log("Fetching game state");
   if (!gameState) {
     console.error("Game state not initialized.");
     return res.status(500).json({ message: "Game state not initialized." });
   }
   res.json({ gameState: gameState });
+  console.log(res);
 });
 
 // Start the server

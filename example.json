@@ -12,7 +12,7 @@
   "currentPlayer": "Alice",
   "phase": {
     "board1": {
-      "categories:": [
+      "categories": [
         {
           "name": "Science",
           "questions": [
@@ -37,7 +37,7 @@
           ]
         },
         {
-          "name": "History",
+          "name": "Test1",
           "questions": [
             {
               "value": 200,
@@ -49,6 +49,35 @@
               "value": 400,
               "question": "In what year did World War II end?",
               "answer": "1945",
+              "available": true
+            },
+            {
+              "value": -1,
+              "question": "What is the powerhouse of the cell?",
+              "answer": "Mitochondria",
+              "available": true
+            }
+          ]
+        },
+        {
+          "name": "Very serious questions, there is nothing strange about these questions, why would you even think that they are totally normal.",
+          "questions": [
+            {
+              "value": 200,
+              "question": "Who was the first President of the United States?",
+              "answer": "George Washington",
+              "available": true
+            },
+            {
+              "value": 400,
+              "question": "In what year did World War II end?",
+              "answer": "1945",
+              "available": true
+            },
+            {
+              "value": -1,
+              "question": "What is the powerhouse of the cell?",
+              "answer": "Mitochondria",
               "available": true
             }
           ]

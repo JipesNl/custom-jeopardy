@@ -12,7 +12,7 @@ export interface GameState {
 }
 
 export interface Board {
-  "categories:": {
+  categories: {
     name: string;
     questions: Question[];
   }[];
