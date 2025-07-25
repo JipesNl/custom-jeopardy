@@ -3,10 +3,20 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-all": "concurrently \"npm install --prefix server && npm install --prefix client\"",
+    "client": "npm start --prefix client",
+    "client-build": "npm run build --prefix client",
+    "client-dev": "npm run dev --prefix client",
+    "server": "npm start --prefix server",
+    "server-dev": "npm run dev --prefix server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-prod": "npm run client-build && npm run server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.2.0"
+  }
 }
