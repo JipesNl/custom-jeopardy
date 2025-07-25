@@ -1,4 +1,4 @@
-import { PlayerContext, PlayerProvider } from "../pages/client/PlayerContext";
+import { ConnectionContext, ConnectionProvider } from "../pages/client/ConnectionContext";
 import {useContext} from "react";
 import Buzzer from "../pages/client/Buzzer";
 import Login from "../pages/client/Login";
@@ -10,14 +10,14 @@ const getPlayerID = () => {
 
 function Home() {
   return (
-    <PlayerProvider>
+    <ConnectionProvider>
       <Page />
-    </PlayerProvider>
+    </ConnectionProvider>
   );
 }
 
 function Page() {
-  const { currentPlayer } = useContext(PlayerContext);
+  const { currentPlayer } = useContext(ConnectionContext);
   return (
     <>
     { currentPlayer ? <Buzzer /> : <Login /> }

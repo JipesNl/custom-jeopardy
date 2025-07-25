@@ -1,53 +1,17 @@
 import {useState, useEffect, useContext} from 'react';
 import {Box, Typography, Button, AppBar, Toolbar, Container} from '@mui/material';
 import {socket} from '../../socket';
-import {PlayerContext} from "./PlayerContext";
+import {ConnectionContext} from "./ConnectionContext";
 
-const getPlayerID = () => {
-  const playerID = sessionStorage.getItem('playerID');
-  return playerID ? JSON.parse(playerID) : null;
-}
 
 function Home() {
-  const [isBuzzed, setIsBuzzed] = useState(false);
-  const [lockedOut, setLockedOut] = useState(false);
-  const [playerID, setPlayerID] = useState(getPlayerID());
-  const {currentPlayer, logout} = useContext(PlayerContext);
+  const {currentPlayer, isBuzzed, lockedOut, handleBuzz, updateStatus, logout} = useContext(ConnectionContext);
 
+  // Refresh the status when the component mounts
   useEffect(() => {
-    sessionStorage.setItem('playerID', JSON.stringify(playerID));
-  }, [playerID]);
-
-  useEffect(() => {
-    socket.connect();
-
-    function onConnect() {
-      socket.emit('join', 'player', playerName);
-    }
-
-    function onDisconnect() {
-
-    }
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-
-    // Clean up the event listeners on component unmount
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-    }
+    if (!currentPlayer) return;
+    updateStatus();
   }, []);
-
-  // Hardcoded player name
-  const playerName = currentPlayer || 'Player ' + (playerID || 1);
-
-  const handleBuzz = () => {
-    if (!lockedOut && !isBuzzed) {
-      setIsBuzzed(true);
-      socket.emit('buzz', playerName);
-    }
-  };
 
   const handleLogout = (event) => {
     event.preventDefault();
@@ -82,7 +46,7 @@ function Home() {
                 transform: 'translateX(-50%)'
               }}
             >
-              {playerName}
+              {currentPlayer}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -95,7 +59,7 @@ function Home() {
           disabled={lockedOut || isBuzzed}
           sx={{
             width: '240px',
-            height: '100px',
+            height: '200px',
             fontSize: '2rem',
             fontWeight: 'bold',
             borderRadius: '12px',
@@ -106,7 +70,7 @@ function Home() {
             },
           }}
         >
-          {lockedOut ? 'Locked Out' : isBuzzed ? 'Buzzed!' : 'Buzz'}
+          {lockedOut ? 'Locked Out' : isBuzzed ? 'Already Buzzed!' : 'Buzz'}
         </Button>
       </Box>
     </Container>
