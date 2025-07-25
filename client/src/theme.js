@@ -10,8 +10,10 @@ const theme = createTheme({
       main: "#FFCC00", // Gold/yellow
     },
     background: {
-      default: "#001f3f", // Dark blue
-      paper: "#002b5c",
+      // default: "#001f3f", // Dark blue
+      // paper: "#002b5c",
+      default: "#07070a",
+      paper: "#000692",
     },
     text: {
       primary: "#ffffff",

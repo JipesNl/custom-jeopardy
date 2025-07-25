@@ -7,6 +7,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { v4: uuidv4 } = require("uuid");
 const { json } = require("express");
+const fs = require("fs");
 
 // Create the HTTP server
 const httpServer = createServer(app);
@@ -22,6 +23,28 @@ const players = new Map();
 let lastBuzzPlayer = null;
 let lockedOut = false;
 let buzzedPlayers = new Set();
+
+const filePath = path.join(__dirname, "..", "example.json");
+
+let gameState = getInitialState();
+console.log(gameState);
+
+function getInitialState() {
+  try {
+    const data = fs.readFileSync(filePath, "utf8");
+    try {
+      const parsedData = JSON.parse(data);
+      console.log("Parsed JSON:", parsedData);
+      return parsedData;
+    } catch (parseError) {
+      console.error("Error parsing JSON:", parseError);
+      return null;
+    }
+  } catch (readError) {
+    console.error("Error reading file:", readError);
+    return null;
+  }
+}
 
 // Attach Socket.IO to the HTTP server
 const io = new Server(httpServer, {
@@ -102,6 +125,24 @@ io.on("connection", (socket) => {
 const clientPath = path.resolve(__dirname, "../client");
 app.use(express.static(path.join(clientPath, "dist")));
 
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/host")) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    try {
+      jwt.verify(token, SECRET);
+      next();
+      return;
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  }
+  next();
+});
+
 // Catch-all route for React client-side routing
 app.get("/", (req, res) => {
   res.sendFile(path.join(clientPath, "dist", "index.html"));
@@ -118,20 +159,13 @@ app.post("/api/login", (req, res) => {
   return res.status(401).json({ message: "Invalid password" });
 });
 
-//example protected route with jwt checking
-// app.get("/protected", (req, res) => {
-//   const authHeader = req.headers.authorization;
-//   if (!authHeader) {
-//     return res.status(401).json({ message: "No token provided" });
-//   }
-//   const token = authHeader.split(" ")[1];
-//   try {
-//     jwt.verify(token, SECRET);
-//     return res.json({ message: "Access granted to protected route" });
-//   } catch (err) {
-//     return res.status(401).json({ message: "Invalid token" });
-//   }
-// });
+app.get("/api/host/game-state", (req, res) => {
+  if (!gameState) {
+    console.error("Game state not initialized.");
+    return res.status(500).json({ message: "Game state not initialized." });
+  }
+  res.json({ gameState: gameState });
+});
 
 // Start the server
 const PORT = 3000;

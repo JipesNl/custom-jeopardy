@@ -1,22 +1,12 @@
 import React from "react";
-import { Button } from "@mui/material";
-import { logOut } from "../pages/host/auth";
+import BoardPage from "../pages/host/BoardPage";
+import { GameProvider } from "../pages/host/GameContext";
 
 const Host = () => {
   return (
-    <div>
-      <h1>Host</h1>
-      <p>This is the host page.</p>
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          logOut();
-        }}
-        variant="contained"
-      >
-        Logout
-      </Button>
-    </div>
+    <GameProvider>
+      <BoardPage />
+    </GameProvider>
   );
 };
 
