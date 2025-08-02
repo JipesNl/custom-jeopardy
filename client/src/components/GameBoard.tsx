@@ -2,23 +2,25 @@ import React from "react";
 import { useGameContext } from "../pages/host/GameContext";
 import { Box, Container } from "@mui/material";
 import GameCard from "./GameCard";
+import { Question } from "../pages/host/GameStateType";
 
 const GameBoard = ({
   selectedBoard = "board1",
 }: {
   selectedBoard: "board1" | "board2";
 }) => {
-  const { gameState } = useGameContext();
+  const { gameState, setActiveQuestion } = useGameContext();
   const categories = gameState?.phase[selectedBoard]?.categories || [];
 
-  const onQuestionClick = (categoryName: string, questionValue: number) => {
+  const onQuestionClick = (
+    categoryName: string,
+    questionValue: number,
+    question: Question,
+  ) => {
     console.log(`Question clicked: ${categoryName} - $${questionValue}`);
 
-    const question = categories
-      .find((category) => category.name === categoryName)
-      .questions.find((q) => q.value === questionValue);
-
     // Implement showing of question dialog.
+    setActiveQuestion(question);
   };
 
   return (
@@ -63,7 +65,7 @@ const GameBoard = ({
                 onClick={() => {
                   if (question.available) {
                     // handle question click here if needed
-                    onQuestionClick(category.name, question.value);
+                    onQuestionClick(category.name, question.value, question);
                   }
                 }}
               >

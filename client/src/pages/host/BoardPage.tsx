@@ -4,7 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { logOut } from "./auth";
 import GameBoard from "../../components/GameBoard";
 import { useGameContext } from "./GameContext";
-import QuestionDisplay from "./QuestionDisplay";
+import QuestionDisplay from "../../components/QuestionDisplay";
 
 const BoardPage = () => {
   const { getActiveQuestion, setActiveQuestion } = useGameContext();
@@ -69,7 +69,12 @@ const BoardPage = () => {
           onClick={() => {
             setActiveQuestion({
               value: 100,
-              question: "Sample Question?",
+              question: `<p>Watch the following video and answer the question:</p>
+<video width="100%" controls>
+  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+`,
               answer: "Sample Answer",
               available: true,
             });
