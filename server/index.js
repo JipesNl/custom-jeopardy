@@ -27,14 +27,12 @@ let buzzedPlayers = new Set();
 const filePath = path.join(__dirname, "..", "example.json");
 
 let gameState = getInitialState();
-console.log(gameState);
 
 function getInitialState() {
   try {
     const data = fs.readFileSync(filePath, "utf8");
     try {
       const parsedData = JSON.parse(data);
-      console.log("Parsed JSON:", parsedData);
       return parsedData;
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
@@ -160,13 +158,29 @@ app.post("/api/login", (req, res) => {
 });
 
 app.get("/api/host/game-state", (req, res) => {
-  console.log("Fetching game state");
   if (!gameState) {
     console.error("Game state not initialized.");
     return res.status(500).json({ message: "Game state not initialized." });
   }
   res.json({ gameState: gameState });
-  console.log(res);
+});
+
+app.post("/api/host/game-state", (req, res) => {
+  console.log("Updating game state");
+  gameState = req.body;
+  res.status(200).send();
+});
+
+app.post("/api/host/current-question", (req, res) => {
+  // Handle setting the current question
+  const { question } = req.body;
+  currentQuestion = question;
+  res.status(200).send();
+});
+
+app.get("/api/host/current-question", (req, res) => {
+  // Handle getting the current question
+  res.json({ question: currentQuestion });
 });
 
 // Start the server

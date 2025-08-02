@@ -4,6 +4,7 @@ export interface GameState {
     bank: number;
   }[];
   currentPlayer: string;
+  currentQuestion: Question | null;
   phase: {
     board1: Board;
     board2: Board; // Empty object

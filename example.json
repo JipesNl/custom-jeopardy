@@ -9,7 +9,8 @@
       "bank": 800
     }
   ],
-  "currentPlayer": "Alice",
+  "currentPlayer": null,
+  "currentQuestion": null,
   "phase": {
     "board1": {
       "categories": [

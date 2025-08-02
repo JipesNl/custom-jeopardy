@@ -2,17 +2,12 @@ import React from "react";
 import { Box, Button, Container, IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logOut } from "./auth";
-import { useGameContext } from "./GameContext";
 import GameBoard from "../../components/GameBoard";
+import { useGameContext } from "./GameContext";
+import QuestionDisplay from "./QuestionDisplay";
 
 const BoardPage = () => {
-  const { gameState, updateState } = useGameContext();
-  const handleGetState = (event) => {
-    event.preventDefault();
-    console.log(gameState);
-    // console.log("Updated Game State:", gameState);
-  };
-
+  const { getActiveQuestion, setActiveQuestion } = useGameContext();
   return (
     <Container>
       <Box
@@ -49,10 +44,15 @@ const BoardPage = () => {
             <LogoutIcon />
           </IconButton>
         </Box>
-        <Box sx={{ flex: 1, px: 2, pb: 2 }}>
-          <GameBoard />
-        </Box>
+        {getActiveQuestion() !== null ? (
+          <QuestionDisplay />
+        ) : (
+          <Box sx={{ flex: 1, px: 2, pb: 2 }}>
+            <GameBoard selectedBoard="board1" />
+          </Box>
+        )}
       </Box>
+      {/* FOOTER: contains players etc. */}
       <Box
         sx={{
           backgroundColor: "primary.main",
@@ -64,8 +64,26 @@ const BoardPage = () => {
           left: 0,
         }}
       >
-        <Button variant="contained" onClick={handleGetState}>
-          Get State
+        <Button
+          variant="contained"
+          onClick={() => {
+            setActiveQuestion({
+              value: 100,
+              question: "Sample Question?",
+              answer: "Sample Answer",
+              available: true,
+            });
+          }}
+        >
+          Set state
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setActiveQuestion(null);
+          }}
+        >
+          Set null
         </Button>
       </Box>
     </Container>
