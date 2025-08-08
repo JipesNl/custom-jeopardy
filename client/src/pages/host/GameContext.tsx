@@ -19,6 +19,10 @@ const getServerState = async () => {
     })
     .catch((error) => {
       console.error("Error fetching game state:", error);
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        window.location.reload(); // Redirect to login or home page
+      }
       return null;
     });
   return response.data.gameState as GameState;
@@ -33,6 +37,10 @@ const setServerState = async (newState: GameState) => {
     })
     .catch((error) => {
       console.error("Error setting game state:", error);
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        window.location.reload(); // Redirect to login or home page
+      }
     });
 };
 
