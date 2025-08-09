@@ -20,7 +20,11 @@ const GameBoard = ({
     console.log(`Question clicked: ${categoryName} - $${questionValue}`);
 
     // Implement showing of question dialog.
-    setActiveQuestion(question);
+    setActiveQuestion({
+      board: selectedBoard,
+      categoryName: categoryName,
+      questionValue: questionValue,
+    });
   };
 
   return (

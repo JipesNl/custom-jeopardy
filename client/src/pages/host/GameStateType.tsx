@@ -1,10 +1,11 @@
 export interface GameState {
-  players: {
-    name: string;
-    bank: number;
-  }[];
+  players: Player[];
   currentPlayer: string;
-  currentQuestion: Question | null;
+  currentQuestion: {
+    board: string;
+    categoryName: string;
+    questionValue: number;
+  } | null;
   phase: {
     board1: Board;
     board2: Board; // Empty object
@@ -24,4 +25,9 @@ export interface Question {
   question: string;
   answer: string;
   available: boolean;
+}
+
+export interface Player {
+  name: string;
+  bank: numer;
 }

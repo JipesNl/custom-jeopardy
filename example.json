@@ -1,14 +1,5 @@
 {
-  "players": [
-    {
-      "name": "Alice",
-      "bank": 1000
-    },
-    {
-      "name": "Bob",
-      "bank": 800
-    }
-  ],
+  "players": [],
   "currentPlayer": null,
   "currentQuestion": null,
   "phase": {

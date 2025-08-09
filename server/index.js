@@ -68,15 +68,20 @@ io.on("connection", (socket) => {
     //Check if name taken
     if ([...players.values()].some((player) => player.name === playerName)) {
       callback({ success: false, message: "Name already taken." });
-    } else {
-      players.set(socket.id, { name: playerName });
-      console.log(`${playerName} joined the game.`);
-      callback({ success: true });
+      return;
     }
+    if (!gameState.players.some((player) => player.name === playerName)) {
+      gameState.players.push({ name: playerName, bank: 0 });
+    }
+    players.set(socket.id, { name: playerName });
+    console.log(`${playerName} joined the game.`);
+    callback({ success: true });
+    io.emit("player-changed");
   });
 
   socket.on("disconnect", () => {
     players.delete(socket.id);
+    io.emit("player-changed");
   });
 
   socket.on("buzz", (playerName) => {
@@ -181,6 +186,12 @@ app.post("/api/host/current-question", (req, res) => {
 app.get("/api/host/current-question", (req, res) => {
   // Handle getting the current question
   res.json({ question: currentQuestion });
+});
+
+app.get("/api/host/players", (req, res) => {
+  // Handle getting the list of players
+  const playerList = Array.from(players.values()).map((player) => player.name);
+  res.json({ players: playerList });
 });
 
 // Start the server
