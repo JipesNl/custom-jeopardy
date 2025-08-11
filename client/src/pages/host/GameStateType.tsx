@@ -6,6 +6,7 @@ export interface GameState {
     categoryName: string;
     questionValue: number;
   } | null;
+  currentPhase: "board1" | "board2" | "final";
   phase: {
     board1: Board;
     board2: Board; // Empty object
@@ -29,5 +30,5 @@ export interface Question {
 
 export interface Player {
   name: string;
-  bank: numer;
+  bank: number;
 }

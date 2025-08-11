@@ -7,8 +7,35 @@ import { useGameContext } from "./GameContext";
 import QuestionDisplay from "../../components/QuestionDisplay";
 import PlayerList from "../../components/PlayerList";
 
+const SwitchPhase = () => {
+  const { isCurrentPhaseComplete, nextPhase, setActiveQuestion, gameState } =
+    useGameContext();
+
+  if (!isCurrentPhaseComplete()) {
+    return null; // Don't render anything if the phase is not complete
+  }
+
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={async () => {
+        await nextPhase();
+      }}
+      sx={{ margin: "16px" }}
+    >
+      Next Board
+    </Button>
+  );
+};
+
 const BoardPage = () => {
-  const { getActiveQuestion, resetBuzzedPlayer } = useGameContext();
+  const {
+    getActiveQuestion,
+    resetBuzzedPlayer,
+    isCurrentPhaseComplete,
+    gameState,
+  } = useGameContext();
   return (
     <Container>
       <Box
@@ -45,11 +72,15 @@ const BoardPage = () => {
             <LogoutIcon />
           </IconButton>
         </Box>
-        {getActiveQuestion() !== null ? (
+        {isCurrentPhaseComplete() ? (
+          <SwitchPhase />
+        ) : gameState.currentPhase === "final" ? (
+          <QuestionDisplay />
+        ) : getActiveQuestion() !== null ? (
           <QuestionDisplay />
         ) : (
           <Box sx={{ flex: 1, px: 2, pb: 2 }}>
-            <GameBoard selectedBoard="board1" />
+            <GameBoard selectedBoard={gameState.currentPhase} />
           </Box>
         )}
       </Box>

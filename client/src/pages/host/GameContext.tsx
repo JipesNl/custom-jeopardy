@@ -21,6 +21,8 @@ interface GameContext {
   ) => void;
   setActiveQuestionCompleted: () => Promise<void>;
   updatePlayer: (newPlayer: Player) => Promise<void>;
+  isCurrentPhaseComplete: () => boolean;
+  nextPhase: () => Promise<void>;
 }
 
 const getServerState = async () => {
@@ -216,6 +218,64 @@ const GameProvider = ({ children }: { children: React.ReactNode }) => {
     socket.emit("buzz-next");
   };
 
+  const isCurrentPhaseComplete = () => {
+    if (!gameState) return false;
+
+    const { currentPhase, phase } = gameState;
+
+    if (currentPhase === "final") {
+      return false;
+    }
+
+    const categories = phase[currentPhase]?.categories || [];
+    return categories.every((category) =>
+      category.questions.every((question) => !question.available),
+    );
+  };
+
+  const setPhase = async (newPhase: "board1" | "board2" | "final") => {
+    if (!gameState) return;
+
+    const updatedGameState = {
+      ...gameState,
+      currentPhase: newPhase,
+    };
+
+    await setState(updatedGameState);
+  };
+
+  const setFinalPhase = async () => {
+    if (!gameState) return;
+
+    const updatedGameState = {
+      ...gameState,
+      currentPhase: "final",
+      currentQuestion: {
+        board: "final",
+        categoryName: "final",
+        questionValue: 100,
+      },
+    };
+
+    await setState(updatedGameState);
+  };
+
+  const nextPhase = async () => {
+    if (!gameState) return;
+
+    const phases = ["board1", "board2", "final"];
+    const currentIndex = phases.indexOf(gameState.currentPhase);
+    const nextPhase = phases[currentIndex + 1];
+
+    if (nextPhase === "final") {
+      await setFinalPhase();
+      return;
+    }
+    if (nextPhase) {
+      await setPhase(nextPhase);
+    }
+  };
+
   useEffect(() => {
     updateState();
   }, []);
@@ -249,6 +309,8 @@ const GameProvider = ({ children }: { children: React.ReactNode }) => {
         setActiveQuestion,
         setActiveQuestionCompleted,
         updatePlayer,
+        isCurrentPhaseComplete,
+        nextPhase,
       }}
     >
       {children}
