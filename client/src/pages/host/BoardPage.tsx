@@ -2,32 +2,12 @@ import React from "react";
 import { Box, Button, Container, IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logOut } from "./auth";
-import GameBoard from "../../components/GameBoard";
 import { useGameContext } from "./GameContext";
-import QuestionDisplay from "../../components/QuestionDisplay";
 import PlayerList from "../../components/PlayerList";
-
-const SwitchPhase = () => {
-  const { isCurrentPhaseComplete, nextPhase, setActiveQuestion, gameState } =
-    useGameContext();
-
-  if (!isCurrentPhaseComplete()) {
-    return null; // Don't render anything if the phase is not complete
-  }
-
-  return (
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={async () => {
-        await nextPhase();
-      }}
-      sx={{ margin: "16px" }}
-    >
-      Next Board
-    </Button>
-  );
-};
+import QuestionDisplay from "../../components/QuestionDisplay";
+import GameBoard from "../../components/GameBoard";
+import Leaderboard from "./Leaderboard";
+import { SwitchPhase } from "./SwitchPhase";
 
 const BoardPage = () => {
   const {
@@ -36,6 +16,29 @@ const BoardPage = () => {
     isCurrentPhaseComplete,
     gameState,
   } = useGameContext();
+
+  function GameView() {
+    let content: React.ReactNode;
+
+    if (isCurrentPhaseComplete()) {
+      content = <SwitchPhase />;
+    } else if (gameState.currentPhase === "final") {
+      content = <QuestionDisplay />;
+    } else if (gameState.currentPhase === "leaderboard") {
+      content = <Leaderboard />;
+    } else if (getActiveQuestion() !== null) {
+      content = <QuestionDisplay />;
+    } else {
+      content = (
+        <Box sx={{ flex: 1, px: 2, pb: 2 }}>
+          <GameBoard selectedBoard={gameState.currentPhase} />
+        </Box>
+      );
+    }
+
+    return content;
+  }
+
   return (
     <Container>
       <Box
@@ -72,17 +75,7 @@ const BoardPage = () => {
             <LogoutIcon />
           </IconButton>
         </Box>
-        {isCurrentPhaseComplete() ? (
-          <SwitchPhase />
-        ) : gameState.currentPhase === "final" ? (
-          <QuestionDisplay />
-        ) : getActiveQuestion() !== null ? (
-          <QuestionDisplay />
-        ) : (
-          <Box sx={{ flex: 1, px: 2, pb: 2 }}>
-            <GameBoard selectedBoard={gameState.currentPhase} />
-          </Box>
-        )}
+        {GameView()}
       </Box>
       {/* FOOTER: contains players and a button */}
       <Box

@@ -6,8 +6,6 @@ import { useGameContext } from "../pages/host/GameContext";
 
 interface PlayerCardProps {
   name: string;
-  bank: number;
-  isBlurred: boolean;
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ name }) => {
@@ -21,6 +19,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ name }) => {
     resetBuzzedPlayer,
     nextBuzzedPlayer,
     updatePlayer,
+    nextPhase,
   } = useGameContext();
   const activeQuestion = getActiveQuestion();
 
@@ -34,6 +33,11 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ name }) => {
       console.log(`Updated player ${name} bank to ${player.bank}`);
     });
     resetBuzzedPlayer();
+    if (gameState.currentPhase === "final") {
+      console.log("Final phase completed, moving to next phase.");
+      nextPhase();
+      return;
+    }
     setActiveQuestionCompleted().then(() => {
       console.log(`Set active question completed`);
       setActiveQuestion(null);

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { GameState, Player, Question } from "./GameStateType";
+import { GameState, Phases, Player, Question } from "./GameStateType";
 import { Box, CircularProgress } from "@mui/material";
 import { socket } from "../../socket";
 
@@ -223,7 +223,7 @@ const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { currentPhase, phase } = gameState;
 
-    if (currentPhase === "final") {
+    if (currentPhase === "final" || currentPhase === "leaderboard") {
       return false;
     }
 
@@ -233,7 +233,7 @@ const GameProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  const setPhase = async (newPhase: "board1" | "board2" | "final") => {
+  const setPhase = async (newPhase: Phases) => {
     if (!gameState) return;
 
     const updatedGameState = {
@@ -257,13 +257,13 @@ const GameProvider = ({ children }: { children: React.ReactNode }) => {
       },
     };
 
-    await setState(updatedGameState);
+    await setState(updatedGameState as GameState);
   };
 
   const nextPhase = async () => {
     if (!gameState) return;
 
-    const phases = ["board1", "board2", "final"];
+    const phases: Phases[] = ["board1", "board2", "final", "leaderboard"];
     const currentIndex = phases.indexOf(gameState.currentPhase);
     const nextPhase = phases[currentIndex + 1];
 

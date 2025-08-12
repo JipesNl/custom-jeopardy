@@ -14,9 +14,8 @@ safe to prevent XSS attacks, and never use untrusted content.
 
 ## Tasks to Be Completed Before Completion
 
-1. **Final Question Handling**:
-   - Ensure the final question logic is fully implemented and tested.
-   - Verify that the final question is properly marked as completed when answered.
+1. **Final Question Handling**
+   - Correct Final Jeopardy handling with score inputs and answer validation.
 
 2. **Error Handling**:
    - Add robust error handling for API calls (e.g., fetching game state, updating players).
@@ -41,17 +40,11 @@ safe to prevent XSS attacks, and never use untrusted content.
 1. **Player Statistics**:
    - Add a leaderboard to display player rankings and scores in real-time.
 
-2. **Customizable Game Boards**:
+2. **Game Board Editor**:
    - Allow hosts to create and customize game boards, categories, and questions.
 
 3. **Timer for Questions**:
    - Add a countdown timer for answering questions to increase game tension.
-
-4. **Mobile Support**:
-   - Optimize the application for mobile devices to allow hosts to manage games on the go.
-
-5. **Multiplayer Support**:
-   - Enable multiple hosts or co-hosts to manage the game simultaneously.
 
 ---
 
