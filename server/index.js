@@ -21,7 +21,7 @@ const PASSWORD = "password"; // add env variable later
 // Store players
 const players = new Map();
 let lastBuzzPlayer = null;
-let lockedOut = false;
+let lockedOut = true;
 let buzzedPlayers = new Set();
 
 const filePath = path.join(__dirname, "..", "example.json");
@@ -46,9 +46,9 @@ function getInitialState() {
 
 // Attach Socket.IO to the HTTP server
 const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-  },
+  // cors: {
+  //   origin: "http://localhost:5173",
+  // },
 });
 
 io.use((socket, next) => {
@@ -127,6 +127,7 @@ io.on("connection", (socket) => {
 // Serve static files
 const clientPath = path.resolve(__dirname, "../client");
 app.use(express.static(path.join(clientPath, "dist")));
+app.use(cors());
 
 app.use((req, res, next) => {
   if (req.path.startsWith("/api/host")) {
@@ -172,6 +173,20 @@ app.get("/api/host/game-state", (req, res) => {
 
 app.post("/api/host/game-state", (req, res) => {
   console.log("Updating game state");
+  if (!req.body || typeof req.body !== "object") {
+    return res.status(400).json({ message: "Invalid game state data." });
+  }
+  if (req.body.currentQuestion !== gameState.currentQuestion) {
+    if (req.body.currentQuestion === null) {
+      console.log("Current question reset");
+      lockedOut = true;
+      io.emit("lock");
+    } else {
+      console.log("Current question set to:", req.body.currentQuestion);
+      lockedOut = false;
+      io.emit("buzz-reset");
+    }
+  }
   gameState = req.body;
   res.status(200).send();
 });
@@ -192,6 +207,10 @@ app.get("/api/host/players", (req, res) => {
   // Handle getting the list of players
   const playerList = Array.from(players.values()).map((player) => player.name);
   res.json({ players: playerList });
+});
+
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(clientPath, "dist", "index.html"));
 });
 
 // Start the server

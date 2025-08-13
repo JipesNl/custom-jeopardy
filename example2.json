@@ -1,0 +1,43 @@
+{
+  "players": [],
+  "currentPlayer": null,
+  "currentQuestion": null,
+  "currentPhase": "board1",
+  "phase": {
+    "board1": {
+      "categories": [
+        {
+          "name": "Science",
+          "questions": [
+            {
+              "value": 200,
+              "question": "What is the chemical symbol for water?",
+              "answer": "H2O",
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    "board2": {
+      "categories": [
+        {
+          "name": "History",
+          "questions": [
+            {
+              "value": 200,
+              "question": "Who was the first President of the United States?",
+              "answer": "George Washington",
+              "available": true
+            }
+          ]
+        }
+      ]
+    },
+    "final": {
+      "question": "What is the capital of France?",
+      "answer": "Paris",
+      "value": 1000
+    }
+  }
+}

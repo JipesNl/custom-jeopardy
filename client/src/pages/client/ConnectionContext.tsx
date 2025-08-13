@@ -67,6 +67,7 @@ const ConnectionProvider = ({ children }) => {
     socket.emit("join-player", currentPlayer, (response) => {
       if (response.success) {
         console.log("Connected as:", currentPlayer);
+        updateStatus();
       } else {
         console.error("Connection failed:", response.message);
         logout();
@@ -84,27 +85,22 @@ const ConnectionProvider = ({ children }) => {
    */
   function onBuzzed(playerName) {
     console.log(`Buzzed by: ${playerName}`);
-    if (playerName === currentPlayer) {
-      setIsBuzzed(true);
-    } else {
-      setIsBuzzed(false);
-      setLockedOut(true);
-    }
+    setLockedOut(true);
+    updateStatus();
   }
 
   /**
    * Handles the `buzz-reset` event to reset the buzz state.
    */
   function onBuzzReset() {
-    setIsBuzzed(false);
-    setLockedOut(false);
+    updateStatus();
   }
 
   /**
    * Handles the `buzz-next` event to unlock the player for the next buzz.
    */
   function onBuzzNext() {
-    setLockedOut(false);
+    updateStatus();
   }
 
   /**
@@ -112,6 +108,13 @@ const ConnectionProvider = ({ children }) => {
    */
   function onDisconnect() {
     console.log("Disconnected from server");
+  }
+
+  /**
+   * Handles the `lock` event to lock out the player from buzzing.
+   */
+  function onBuzzLock() {
+    updateStatus();
   }
 
   useEffect(() => {
@@ -124,6 +127,7 @@ const ConnectionProvider = ({ children }) => {
     socket.on("buzzed", onBuzzed);
     socket.on("buzz-reset", onBuzzReset);
     socket.on("buzz-next", onBuzzNext);
+    socket.on("lock", onBuzzLock);
 
     // Clean up the event listeners on component unmount
     return () => {
@@ -132,6 +136,7 @@ const ConnectionProvider = ({ children }) => {
       socket.off("buzzed", onBuzzed);
       socket.off("buzz-reset", onBuzzReset);
       socket.off("buzz-next", onBuzzNext);
+      socket.off("lock", onBuzzLock);
     };
   }, [currentPlayer]);
 

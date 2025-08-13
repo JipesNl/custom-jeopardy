@@ -15,6 +15,9 @@ const BoardPage = () => {
     resetBuzzedPlayer,
     isCurrentPhaseComplete,
     gameState,
+    nextPhase,
+    setActiveQuestionCompleted,
+    setActiveQuestion,
   } = useGameContext();
 
   function GameView() {
@@ -103,9 +106,18 @@ const BoardPage = () => {
           }}
           onClick={() => {
             resetBuzzedPlayer();
+            if (gameState.currentPhase === "final") {
+              console.log("Final phase completed, moving to next phase.");
+              nextPhase();
+              return;
+            }
+            setActiveQuestionCompleted().then(() => {
+              console.log(`Set active question completed`);
+              setActiveQuestion(null);
+            });
           }}
         >
-          Action
+          End Question
         </Button>
       </Box>
     </Container>
